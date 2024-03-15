@@ -3,7 +3,6 @@ import { sendBlogNotification } from "../Helpers/newBlogAddedMail.js";
 import Blog from "../model/blogModel.js";
 import cloudinary from "../config/cloudinary.js";
 
-
 //add blogs
 
 export async function addBlog(req, res) {
@@ -16,7 +15,7 @@ export async function addBlog(req, res) {
       metaTag,
       slug,
       date,
-      content,     
+      content,
     } = req.body;
     if (
       !title ||
@@ -28,12 +27,15 @@ export async function addBlog(req, res) {
       !date ||
       !content
     ) {
-      res.status(400).json({ status: false, message: "All fields are mandatory" });
+      res
+        .status(400)
+        .json({ status: false, message: "All fields are mandatory" });
       return;
     }
 
-    // Upload each blog content to Cloudinary
+    // Upload image to Cloudinary
     const uploadBlogToCloudinary = async (file) => {
+      console.log(file, "imageeeeee");
       if (file) {
         const uploadedBlogContent = await cloudinary.uploader.upload(file, {
           folder: "ortmor", // Setting folder to upload
@@ -43,9 +45,13 @@ export async function addBlog(req, res) {
       }
       return "";
     };
+    const uploadedImageUrl = await uploadBlogToCloudinary(
+      req.files.image[0].path
+    );
 
-    // Upload each blog content to Cloudinary
+    // Upload each blog video content to Cloudinary
     const uploadBlogvideoToCloudinary = async (file) => {
+      console.log(file, "fileeeee");
       if (file) {
         const uploadedBlogContent = await cloudinary.uploader.upload(file, {
           folder: "ortmor", // Setting folder to upload
@@ -55,12 +61,12 @@ export async function addBlog(req, res) {
       }
       return "";
     };
-    
-    // Upload image to Cloudinary
-    const uploadedImageUrl = await uploadBlogToCloudinary(req.files.image[0].path);
-    const uploadedVideoUrl = await uploadBlogvideoToCloudinary(req.files.video[0].path);
+    const uploadedVideoUrl = await uploadBlogvideoToCloudinary(
+      req.files.video[0].path
+    );
+
+    // console.log(uploadedVideoUrl);
     const formattedDate = moment(date, "DD-MM-YYYY").toDate();
-console.log(formattedDate);
     const blog = new Blog({
       title,
       shortDescription,
@@ -69,13 +75,12 @@ console.log(formattedDate);
       metaTag,
       slug,
       date: formattedDate,
-      image: uploadedImageUrl, // Use uploaded image URL here
-      video:uploadedVideoUrl,
+      image: uploadedImageUrl,
+      video: uploadedVideoUrl,
       content,
     });
-
+    console.log(blog, "blogdb");
     await blog.save();
-
 
     // Creating a message object for sending email messages
     const message = {
@@ -83,7 +88,9 @@ console.log(formattedDate);
       blog: title,
     };
 
-    res.status(200).json({ status: true, message: "Blog has been added successfully" });
+    res
+      .status(200)
+      .json({ status: true, message: "Blog has been added successfully" });
 
     // Sending an email notification about the blog added
     await sendBlogNotification(process.env.ADMIN_EMAIL, message);
@@ -93,45 +100,48 @@ console.log(formattedDate);
   }
 }
 
-
 //get blogs
 
-export async function getBlog (req , res) {
-
+export async function getBlog(req, res) {
   try {
-    
     // finding All blog and find the title details also by populating
-    const blog = await Blog.find().skip(req.paginatedResults.startIndex).limit(req.paginatedResults.limit).populate('title').lean()
-    if(blog) {
-      res.status(200).json({ status : true , blog , pagination : req.paginatedResults})
+    const blog = await Blog.find()
+      .skip(req.paginatedResults.startIndex)
+      .limit(req.paginatedResults.limit)
+      .populate("title")
+      .lean();
+    if (blog) {
+      res
+        .status(200)
+        .json({ status: true, blog, pagination: req.paginatedResults });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status : false , message : " Internal Server Error "}) ;
+    res.status(500).json({ status: false, message: " Internal Server Error " });
   }
 }
 
 // Delete blog
 
-export async function deleteBlog (req , res) {
+export async function deleteBlog(req, res) {
   try {
-    // Find course by id and delete 
-    console.log('Received blogId:', req.params.blogId);
+    // Find course by id and delete
+    console.log("Received blogId:", req.params.blogId);
 
-  const deletedBlog = await Blog.findByIdAndDelete(req.params.blogId) ;
+    const deletedBlog = await Blog.findByIdAndDelete(req.params.blogId);
 
-  if(deletedBlog) { 
-    res.status(200).json({status : true , message : " Blog deleted successfully" })
-  }else{
-    res.status(500).json({ status : false , message : "Internal Server Error" })
-  }
+    if (deletedBlog) {
+      res
+        .status(200)
+        .json({ status: true, message: " Blog deleted successfully" });
+    } else {
+      res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status : false , message : "Internal server error" })
+    res.status(500).json({ status: false, message: "Internal server error" });
   }
-
-} 
-
+}
 
 // Edit blog Details
 
@@ -155,7 +165,9 @@ export async function EditBlogDetails(req, res) {
 
     let image;
     if (req.files?.image && req.files.image[0].path) {
-      const uploadedImageUrl = await uploadBlogToCloudinary(req.files.image[0].path);
+      const uploadedImageUrl = await uploadBlogToCloudinary(
+        req.files.image[0].path
+      );
       if (uploadedImageUrl) {
         image = uploadedImageUrl;
       }
@@ -182,7 +194,9 @@ export async function EditBlogDetails(req, res) {
       }
     );
 
-    res.status(200).json({ status: true, message: "Blog updated successfully" });
+    res
+      .status(200)
+      .json({ status: true, message: "Blog updated successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: false, message: "Internal server error" });
