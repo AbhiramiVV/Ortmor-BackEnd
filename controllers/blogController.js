@@ -15,7 +15,7 @@ export async function addBlog(req, res) {
       metaTag,
       slug,
       date,
-      content,
+      content,     
     } = req.body;
     if (
       !title ||
@@ -27,15 +27,13 @@ export async function addBlog(req, res) {
       !date ||
       !content
     ) {
-      res
-        .status(400)
-        .json({ status: false, message: "All fields are mandatory" });
+      res.status(400).json({ status: false, message: "All fields are mandatory" });
       return;
     }
 
-    // Upload image to Cloudinary
+    // Upload each blog content to Cloudinary
+
     const uploadBlogToCloudinary = async (file) => {
-      console.log(file, "imageeeeee");
       if (file) {
         const uploadedBlogContent = await cloudinary.uploader.upload(file, {
           folder: "ortmor", // Setting folder to upload
@@ -45,13 +43,10 @@ export async function addBlog(req, res) {
       }
       return "";
     };
-    const uploadedImageUrl = await uploadBlogToCloudinary(
-      req.files.image[0].path
-    );
+    const uploadedImageUrl = await uploadBlogToCloudinary(req.files.image[0].path);
 
-    // Upload each blog video content to Cloudinary
+  // Upload image to Cloudinary
     const uploadBlogvideoToCloudinary = async (file) => {
-      console.log(file, "fileeeee");
       if (file) {
         const uploadedBlogContent = await cloudinary.uploader.upload(file, {
           folder: "ortmor", // Setting folder to upload
@@ -61,11 +56,8 @@ export async function addBlog(req, res) {
       }
       return "";
     };
-    const uploadedVideoUrl = await uploadBlogvideoToCloudinary(
-      req.files.video[0].path
-    );
-
-    // console.log(uploadedVideoUrl);
+    const uploadedVideoUrl = await uploadBlogvideoToCloudinary(req.files.video[0].path);
+  
     const formattedDate = moment(date, "DD-MM-YYYY").toDate();
     const blog = new Blog({
       title,
@@ -75,12 +67,13 @@ export async function addBlog(req, res) {
       metaTag,
       slug,
       date: formattedDate,
-      image: uploadedImageUrl,
-      video: uploadedVideoUrl,
+      image: uploadedImageUrl, // Use uploaded image URL here
+      video:uploadedVideoUrl,
       content,
     });
-    console.log(blog, "blogdb");
+
     await blog.save();
+
 
     // Creating a message object for sending email messages
     const message = {
@@ -88,9 +81,7 @@ export async function addBlog(req, res) {
       blog: title,
     };
 
-    res
-      .status(200)
-      .json({ status: true, message: "Blog has been added successfully" });
+    res.status(200).json({ status: true, message: "Blog has been added successfully" });
 
     // Sending an email notification about the blog added
     await sendBlogNotification(process.env.ADMIN_EMAIL, message);
@@ -99,7 +90,6 @@ export async function addBlog(req, res) {
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 }
-
 //get blogs
 
 export async function getBlog(req, res) {

@@ -11,7 +11,6 @@ import {
 import {addBlog,getBlog,deleteBlog,EditBlogDetails} from "../controllers/blogController.js"
 import { loginSchema, signupSchema } from "../Utils/yupSchema.js";
 import validate from "../middleware/validateBody.js";
-import uploadImage from "../middleware/image-upload.js";
 import paginatedResults from "../middleware/pagination.js";
 
 import uploadFile from "../middleware/image-upload.js";
