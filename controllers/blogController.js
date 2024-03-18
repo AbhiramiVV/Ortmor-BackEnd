@@ -148,7 +148,7 @@ export async function EditBlogDetails(req, res) {
     if (!blog) {
       return res.status(404).json({ status: false, message: "Blog not found" });
     }
-
+    //update images
     const uploadBlogToCloudinary = async (file) => {
       if (file) {
         const uploadedBlogContent = await cloudinary.uploader.upload(file, {
@@ -171,11 +171,11 @@ export async function EditBlogDetails(req, res) {
     } else {
       image = blog.image;
     }
-
+    //update videos
     const uploadBlogvideoToCloudinary = async (file) => {
       if (file) {
         const uploadedBlogContent = await cloudinary.uploader.upload(file, {
-          folder: "ortmor", 
+          folder: "ortmor",
           resource_type: "video",
         });
         return uploadedBlogContent.url || "";
