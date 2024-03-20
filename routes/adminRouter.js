@@ -38,19 +38,17 @@ router.post("/chacking-Otp", chackingOtp);
 router.post("/change-Password", changePassword);
 
 // Account
-
 router.get('/get-Account', getAdminDetails)
 router.patch('/update-Profile' ,updateAdminProfile)
-router.patch('/update-Avatar' ,uploadFile("./public/images/admin") , updateAdminAvatar)
+router.patch('/update-Avatar' ,uploadFile("./public/content/admin") , updateAdminAvatar)
 
 
 //For Blog
-// router.post('/add-Blog' ,uploadVideo('./public/video/blog'),uploadImage('./public/images/blog'), addBlog )
-router.post('/add-Blog' ,uploadFile('./public/images/blog'), addBlog )
+router.post('/add-Blog' ,uploadFile('./public/content/blog'), addBlog )
 
 router.get('/get-Blog' ,paginatedResults(),getBlog)
 router.delete('/delete-Blog/:blogId' , deleteBlog) 
-router.put('/update-Blog' , uploadFile('./public/images/blog' ) ,EditBlogDetails)
+router.put('/update-Blog' , uploadFile('./public/content/blog' ) ,EditBlogDetails)
 
 
 export default router;
