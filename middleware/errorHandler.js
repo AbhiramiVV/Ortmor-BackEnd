@@ -45,7 +45,28 @@ export const errorHandler = (err, req, res, next) => {
         stackTrace: err.stack,
       });
       break;
-
+      case ErrorCodes.METHOD_NOT_ALLOWED:
+        res.json({
+          title: "Method not allowed",
+          message: err.message,
+          stackTrace: err.stack,
+        });
+        break;
+        case ErrorCodes.CONFLICT:
+          res.json({
+            title: "Conflict",
+            message: err.message,
+            stackTrace: err.stack,
+          });
+          break;
+          case ErrorCodes.BAD_GATEWAY:
+            res.json({
+              title:"Bad gateway",
+              message:err.message,
+              stackTrace:err.stack,
+            })
+            break;
+            
     default:
       console.log("No Error. Good to go.");
       break;

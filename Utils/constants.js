@@ -4,4 +4,9 @@ export const ErrorCodes = {
     FORBIDDEN: 403,
     NOT_FOUND: 404,
     SERVER_ERROR : 500 ,
+    METHOD_NOT_ALLOWED: 405,
+    CONFLICT: 409,
+    BAD_GATEWAY: 502,
+    SERVICE_UNAVAILABLE: 503,
+    GATEWAY_TIMEOUT: 504
   };
