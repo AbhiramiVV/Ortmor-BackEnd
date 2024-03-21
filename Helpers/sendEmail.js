@@ -15,9 +15,9 @@ export function sendEmail (email , otp){
           var mailOptions={
             from: process.env.EMAIL,
             to: email,
-            subject: "Ortmor Agency mail verification",
+            subject: "Ortmor Technology Agency mail verification",
             html: `
-            <p> mail verification for Ortmor Agency </p>
+            <p> mail verification for Ortmor Technology Agency </p>
             <h3>use this code <h2>${otp}</h2> to verify your email</h3>
             `,
           }

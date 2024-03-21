@@ -21,8 +21,8 @@ export function sendVerificationCode (email){
             to: email,
             subject: "Ortmor Technology Agency Pvt Ltd Email verification",
             html: `
-            <h1>Verify Your Email ForOrtmor Technology Agency Pvt Ltd</h1>
-              <h3>use this code inOrtmor Technology Agency Pvt Ltd to verify your email</h3>
+            <h1>Verify Your Email For Ortmor Technology Agency Pvt Ltd</h1>
+              <h3>use this code in Ortmor Technology Agency Pvt Ltd to verify your email</h3>
               <h2>${otp}</h2>
             `,
           }
