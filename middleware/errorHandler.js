@@ -71,14 +71,14 @@ export const errorHandler = (err, req, res, next) => {
         stackTrace: err.stack,
       });
       break;
-  
     case ErrorCodes.GATEWAY_TIMEOUT:
       res.json({
-        title: "Gateway timeout",
+        title: "Gateway Timeout",
         message: err.message,
         stackTrace: err.stack,
       });
       break;
+   
     default:
       console.log("No Error. Good to go.");
       break;

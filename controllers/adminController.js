@@ -2,7 +2,7 @@ import { sendVerificationCode, verifyOtp } from "../Helpers/otpVerification.js";
 import Admin from "../model/adminModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import axios from 'axios';
+import axios from "axios";
 import { sendEmail } from "../Helpers/sendEmail.js";
 import { randomNumber } from "../Utils/randomNum.js";
 
@@ -102,6 +102,11 @@ export async function login(req, res) {
 
       // Creating Token With user id
       const token = createToken(admin._id);
+      res.cookie("admin jwt", token, {
+        withCredentials: true,
+        httpOnly: false,
+        maxAge: maxAge * 1000,
+      });
       res
         .status(200)
         .json({ admin, token, login: true, message: "Login successfully " });
@@ -113,8 +118,6 @@ export async function login(req, res) {
     res.status(500).json({ login: false, message: "Internal Server Error" });
   }
 }
-
-
 
 // login with google
 
@@ -191,7 +194,6 @@ export async function login(req, res) {
 //   }
 // }
 
-
 //Get Admin Account
 
 export async function getAdminDetails(req, res) {
@@ -202,7 +204,9 @@ export async function getAdminDetails(req, res) {
     );
 
     if (!adminDetails) {
-      return res.status(404).json({ status: false, message: "Admin not found" });
+      return res
+        .status(404)
+        .json({ status: false, message: "Admin not found" });
     }
 
     res.status(200).json({ adminDetails });
@@ -227,110 +231,118 @@ export async function updateAdminProfile(req, res) {
   }
 }
 
-export async function updateAdminAvatar (req , res) {
+export async function updateAdminAvatar(req, res) {
   try {
-    // updating the image upload path 
-    const image = process.env.BASE_URL + req.files.image[0].path.substring('public'.length);
-    // updating the data 
+    // updating the image upload path
+    const image =
+      process.env.BASE_URL + req.files.image[0].path.substring("public".length);
+    // updating the data
     const updateAdmin = await Admin.findByIdAndUpdate(
       res.adminId,
       { $set: { picture: image } },
       { new: true } // This option returns the updated document
     );
 
-    res.status(200).json({status : true, message : "Profile updated successfully"})
-
+    res
+      .status(200)
+      .json({ status: true, message: "Profile updated successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({status : false, message : "Internal Server Error"})
+    res.status(500).json({ status: false, message: "Internal Server Error" });
   }
-
-}  
-
-
-
-
-
-
-
+}
 
 // Forgot password email varification
 export async function forgotPassword(req, res) {
   try {
     const admin = await Admin.findOne({
       email: req.body.email,
-      login:false
+      login: false,
     });
     if (admin) {
-      let otp =randomNumber()
-       sendEmail(admin.email,otp);
-       const tempToken = jwt.sign({
-        otp: otp,
-    }, "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa");
+      let otp = randomNumber();
+      sendEmail(admin.email, otp);
+      const tempToken = jwt.sign(
+        {
+          otp: otp,
+        },
+        "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+      );
 
-    return res.cookie("tempToken", tempToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-        sameSite: "none",
-    }).json({ err: false, message: `Otp send successfully ${admin.email}` });
- 
-}
-}catch(err){
-  console.log(err);
-  return res.status(500).json({ err: true, message: 'Internal server error' });
-
-}
+      return res
+        .cookie("tempToken", tempToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+          sameSite: "none",
+        })
+        .json({ err: false, message: `Otp send successfully ${admin.email}` });
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ err: true, message: "Internal server error" });
+  }
 }
 
 //Checking otp
 export const chackingOtp = async (req, res) => {
   try {
-      const { email, otp } = req.body;
-      let admin = await Admin.findOne({ email });
-      let tempToken = req.cookies.tempToken;
-      const OtpToken = jwt.verify(tempToken, '00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa');
-      
-      if (otp == OtpToken.otp) {
-          let id = admin._id;
-          const newTempToken = jwt.sign({ ID: id }, "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa");
+    const { email, otp } = req.body;
+    let admin = await Admin.findOne({ email });
+    let tempToken = req.cookies.tempToken;
+    const OtpToken = jwt.verify(
+      tempToken,
+      "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+    );
 
-          return res.cookie("tempToken", newTempToken, {
-              httpOnly: true,
-              secure: true,
-              maxAge: 1000 * 60 * 60 * 24 * 7,
-              sameSite: "none",
-          }).status(200).json('success');
-      } else {
-          res.status(404).json("Not found");
-      }
+    if (otp == OtpToken.otp) {
+      let id = admin._id;
+      const newTempToken = jwt.sign(
+        { ID: id },
+        "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+      );
+
+      return res
+        .cookie("tempToken", newTempToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+          sameSite: "none",
+        })
+        .status(200)
+        .json("success");
+    } else {
+      res.status(404).json("Not found");
+    }
   } catch (error) {
     console.log(error);
-      res.status(500).json("Server error. Please contact the developer.");
+    res.status(500).json("Server error. Please contact the developer.");
   }
 };
-
 
 //Reset password
 
 export const changePassword = async (req, res) => {
   try {
-      let tempToken = req.cookies.tempToken;
-      const OtpToken = jwt.verify(tempToken, '00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa');
-      let id = OtpToken.ID;
+    let tempToken = req.cookies.tempToken;
+    const OtpToken = jwt.verify(
+      tempToken,
+      "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+    );
+    let id = OtpToken.ID;
 
-      const { password } = req.body;
-      let bcrypPassword = await bcrypt.hash(password, 10);
+    const { password } = req.body;
+    let bcrypPassword = await bcrypt.hash(password, 10);
 
-      await Admin.updateOne({ _id: id }, { $set: { password: bcrypPassword } }).then(() => {
-          res.status(200).json("success");
-      });
+    await Admin.updateOne(
+      { _id: id },
+      { $set: { password: bcrypPassword } }
+    ).then(() => {
+      res.status(200).json("success");
+    });
   } catch (error) {
-      res.status(500).json("Server error. Please contact the developer.");
+    res.status(500).json("Server error. Please contact the developer.");
   }
 };
-
-
-
- 
-

@@ -20,7 +20,6 @@ app.use(morgan('dev'));
 
 // Use cookie-parser middleware
 app.use(cookieParser());
-
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 app.use(express.static(path.resolve() +"/public"))
@@ -35,20 +34,13 @@ dbConnect();
 
 app.use("/admin" , adminRouter)
 app.use("/superAdmin" ,superAdminRouter )
-// app.post('/uploadVideo',uploadVideo('./public/video/blog'), (req, res) => {
-//   console.log(req.files); 
 
-
-//   res.send('success');
-// });
-
-// multer Errror
 
 app.use(( err ,req , res , next) => {
   if(err instanceof multer.MulterError) {
     
     console.log(err);
-   // A multer error occured when uploading image
+   // A multer error occured when uploading
    if(err.code == 'LIMIT_FILE_TYPE') {
      res.json({ message : err.message });
    }else{

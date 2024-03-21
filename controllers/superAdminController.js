@@ -71,9 +71,9 @@ export async function SuperAdminLogin(req , res) {
       if(!validPassword){
         return res.json({message: "Incorrect email or password"})
       }
-      // creating token with adminid
+      // creating token with superadminid
       const token = createToken(superAdmin._id);
-      res.cookie("jwt" , token , {
+      res.cookie("super admin jwt" , token , {
         withCredentials: true,
         httpOnly : false ,
         maxAge: maxAge *1000
@@ -81,8 +81,8 @@ export async function SuperAdminLogin(req , res) {
       })
       // hiding password and pass the admin only
       superAdmin.password = "empty"
-      res.status(200).json({superAdmin , token , login : true });
-  
+      res.status(200).json({superAdmin , token , login : true ,message: "Login successfully "});
+    
     } catch (error) {
         console.log(error);
       res.status(500).json({message: "Internal Server Error"})
