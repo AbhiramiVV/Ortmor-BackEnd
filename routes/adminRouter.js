@@ -12,7 +12,6 @@ import {addBlog,getBlog,deleteBlog,EditBlogDetails} from "../controllers/blogCon
 import { loginSchema, signupSchema } from "../Utils/yupSchema.js";
 import validate from "../middleware/validateBody.js";
 import paginatedResults from "../middleware/pagination.js";
-
 import uploadFile from "../middleware/image-upload.js";
 // import { verifyAdminLogin } from '../middleware/adminAuth.js';
 

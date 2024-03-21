@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler' 
+import { Schema } from 'yup'
 
 const validate = ( Schema ) => asyncHandler(async(req,res,next) => {
   try {

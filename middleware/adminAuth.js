@@ -15,7 +15,6 @@ export async function verifyAdminLogin(req, res, next) {
           res.json({ status: false, message: "Permission not allowed" });
         } else {
           // finding the admin with the decoded id
-
           const admin = await Admin.findById(decoded.ID);
           if (admin) {
             res.adminId = decoded.ID;
