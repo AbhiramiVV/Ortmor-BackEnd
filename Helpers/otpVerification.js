@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-let otpValue
+let otpValue;
 
 export function sendVerificationCode (email){
 
