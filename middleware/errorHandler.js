@@ -1,7 +1,5 @@
 import { ErrorCodes } from "../Utils/constants";
 
-
-
 export const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode ? res.statusCode : 500;
 
@@ -45,28 +43,42 @@ export const errorHandler = (err, req, res, next) => {
         stackTrace: err.stack,
       });
       break;
-      case ErrorCodes.METHOD_NOT_ALLOWED:
-        res.json({
-          title: "Method not allowed",
-          message: err.message,
-          stackTrace: err.stack,
-        });
-        break;
-        case ErrorCodes.CONFLICT:
-          res.json({
-            title: "Conflict",
-            message: err.message,
-            stackTrace: err.stack,
-          });
-          break;
-          case ErrorCodes.BAD_GATEWAY:
-            res.json({
-              title:"Bad gateway",
-              message:err.message,
-              stackTrace:err.stack,
-            })
-            break;
-            
+    case ErrorCodes.METHOD_NOT_ALLOWED:
+      res.json({
+        title: "Method not allowed",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    case ErrorCodes.CONFLICT:
+      res.json({
+        title: "Conflict",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    case ErrorCodes.BAD_GATEWAY:
+      res.json({
+        title: "Bad gateway",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    case ErrorCodes.SERVICE_UNAVAILABLE:
+      res.json({
+        title: "Service unavailable",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    case ErrorCodes.GATEWAY_TIMEOUT:
+      res.json({
+        title: "Gateway Timeout",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+
     default:
       console.log("No Error. Good to go.");
       break;
