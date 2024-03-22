@@ -44,7 +44,6 @@ router.patch('/update-Avatar' ,uploadFile("./public/content/admin") , updateAdmi
 
 //For Blog
 router.post('/add-Blog' ,uploadFile('./public/content/blog'), addBlog )
-
 router.get('/get-Blog' ,paginatedResults(),getBlog)
 router.delete('/delete-Blog/:blogId' , deleteBlog) 
 router.put('/update-Blog' , uploadFile('./public/content/blog' ) ,EditBlogDetails)
