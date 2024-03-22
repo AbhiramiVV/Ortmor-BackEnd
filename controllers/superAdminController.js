@@ -218,10 +218,10 @@ export async function getBlog (req , res) {
   
       switch(status) {
         case 'block' : 
-            updatedData.status = false;
+            updatedData.status = true;
           break;
         case 'unblock' : 
-            updatedData.status = true;
+            updatedData.status = false;
         break ;
         default : 
         return res.status(400).json({status : false, message : 'Invalid status'})
@@ -229,6 +229,7 @@ export async function getBlog (req , res) {
   
   
       const response = await Blog.updateOne({ _id :blogId} , {$set : updatedData})
+      console.log(Blog.updateOne({ _id :blogId} , {$set : updatedData}));
       if(response.modifiedCount ===1) {
         const message = status === 'block' ? 'Blog Blocked Successfully' : 'Blog Unblocked Successfully'
         return res.status(200).json({ status : true , message })
@@ -240,6 +241,23 @@ export async function getBlog (req , res) {
       res.status(500).json({ status : false , message : 'Internal Server Error'}) ;
       
     }
+    // try {
+    //   const id = req.params.id;
+    //   const blogStatus = await Blog.findById(id);
   
+    //   if (blogStatus.status === true) {
+    //     const status = await Blog.findByIdAndUpdate(id, { status: false });
+       
+    //     return res.status(200).json({ success: true ,message:"Blog Blocked succesfully"});
+    //   } else {
+    //     const status = await Blog.findByIdAndUpdate(id, { status: true });
+    //     return res.status(200).json({ success: true ,message:"Blog UnBlocked succesfully"});
+    //   }
+    //   res.status(404).json({ status : false , message : 'Blog not found'}) ;
+    // } catch (error) {
+    //   console.error('Error blocking/unblocking blog:', error);
+    //   res.status(500).json({ success: false, error: 'Internal Server Error' });
+    // }
+     
   }
   
