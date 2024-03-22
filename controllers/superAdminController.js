@@ -84,7 +84,7 @@ export async function SuperAdminLogin(req , res) {
       res.status(200).json({superAdmin , token , login : true ,message: "Login successfully "});
     
     } catch (error) {
-        console.log(error);
+        console.error(error);
       res.status(500).json({message: "Internal Server Error"})
     }
   

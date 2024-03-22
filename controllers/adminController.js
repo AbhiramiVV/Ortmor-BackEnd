@@ -88,14 +88,12 @@ export async function login(req, res) {
         .json({ login: false, message: "All fields are required" });
     }
     const admin = await Admin.findOne({ email });
-    console.log(admin);
     if (admin) {
       if (!admin.status) {
         return res.json({ login: false, message: "Sorry, you are banned" });
       }
 
       const validPassword = await bcrypt.compare(password, admin.password);
-      console.log(validPassword);
       if (!validPassword) {
         return res.json({ login: false, message: "Incorrect password" });
       }

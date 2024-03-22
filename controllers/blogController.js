@@ -123,7 +123,6 @@ export async function getBlog(req, res) {
 export async function deleteBlog(req, res) {
   try {
     // Find course by id and delete
-    console.log("Received blogId:", req.params.blogId);
 
     const deletedBlog = await Blog.findByIdAndDelete(req.params.blogId);
 
@@ -135,7 +134,7 @@ export async function deleteBlog(req, res) {
       res.status(500).json({ status: false, message: "Internal Server Error" });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ status: false, message: "Internal server error" });
   }
 }
@@ -189,13 +188,11 @@ export async function EditBlogDetails(req, res) {
       );
 
       if (uploadedVideoUrl) {
-        console.log(uploadedVideoUrl, "videos came");
         video = uploadedVideoUrl;
       }
     } else {
       video = blog.video;
     }
-    console.log(video, "video");
 
     const formattedDate = moment(req.body.date, "DD-MM-YYYY").toDate();
 
