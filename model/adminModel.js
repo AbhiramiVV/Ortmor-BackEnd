@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const adminSchema = new mongoose.Schema(
   {
     firstName: {
@@ -33,30 +32,27 @@ const adminSchema = new mongoose.Schema(
     about: {
       type: String,
     },
-    googleId : {
-      type : String ,
-      allowNull : true
-    },
-
-    loginWithGoogle : {
-      type : Boolean ,
-      default : false 
-    },
-    picture : {
+    googleId: {
       type: String,
+      allowNull: true,
+    },
 
+    loginWithGoogle: {
+      type: Boolean,
+      default: false,
+    },
+    picture: {
+      type: String,
     },
 
     image: {
-      type : Object 
+      type: Object,
     },
   },
   {
     timestamps: true,
   }
 );
-
-
 
 const adminModel = mongoose.model("Admin", adminSchema);
 

@@ -41,7 +41,10 @@ export async function generateOtp(req, res) {
           res.json({ status: false, message: "OTP not send" });
         });
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ status: false, message: "Internal Server error" });
+  }
 }
 
 // verify otp
@@ -78,6 +81,7 @@ export async function doSignup(req, res) {
   }
 }
 
+
 // login
 export async function login(req, res) {
   try {
@@ -94,6 +98,7 @@ export async function login(req, res) {
       }
 
       const validPassword = await bcrypt.compare(password, admin.password);
+      console.log(validPassword);
       if (!validPassword) {
         return res.json({ login: false, message: "Incorrect password" });
       }
