@@ -123,7 +123,7 @@ export async function login(req, res) {
 }
 
 //log out
-export const userLogout = (req, res) => {
+export const adminLogout = (req, res) => {
   return res
     .cookie('admin jwt', '', {
       httpOnly: true,
