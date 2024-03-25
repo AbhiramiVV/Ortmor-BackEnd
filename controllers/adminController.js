@@ -122,6 +122,23 @@ export async function login(req, res) {
   }
 }
 
+//log out
+export const userLogout = (req, res) => {
+  return res
+    .cookie('admin jwt', '', {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      sameSite: 'none',
+    })
+    .cookie('signupToken', '', {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      sameSite: 'none',
+    })
+    .json({ err: false, message: 'Logged out successfully' });
+};
 
 //  Resend otp
 
@@ -293,7 +310,7 @@ export async function forgotPassword(req, res) {
         {
           otp: otp,
         },
-        process.env.JWT_SECRET_KEY_ADMIN, 
+        admin_secret_key, 
       );
 
       return res
@@ -321,7 +338,7 @@ export const chackingOtp = async (req, res) => {
     let tempToken = req.cookies.tempToken;
     const OtpToken = jwt.verify(
       tempToken,
-      process.env.JWT_SECRET_KEY_ADMIN, 
+      admin_secret_key, 
 
     );
 
@@ -329,7 +346,7 @@ export const chackingOtp = async (req, res) => {
       let id = admin._id;
       const newTempToken = jwt.sign(
         { ID: id },
-        process.env.JWT_SECRET_KEY_ADMIN, 
+        admin_secret_key, 
 
       );
 
@@ -358,7 +375,7 @@ export const changePassword = async (req, res) => {
     let tempToken = req.cookies.tempToken;
     const OtpToken = jwt.verify(
       tempToken,
-      process.env.JWT_SECRET_KEY_ADMIN, 
+      admin_secret_key, 
 
     );
     let id = OtpToken.ID;

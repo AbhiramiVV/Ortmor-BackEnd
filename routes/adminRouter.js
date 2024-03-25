@@ -6,7 +6,8 @@ import {
   forgotPassword,
   chackingOtp,
   changePassword,
-  resendOtp
+  resendOtp,
+  userLogout
   // googleAuth
 
 } from "../controllers/adminController.js";
@@ -24,7 +25,10 @@ const router = express.Router();
 
 router.post("/signup", validate(signupSchema), generateOtp);
 router.post("/otp", doSignup);
-router.post("/login", validate(loginSchema), login);
+router.post("/login", validate(loginSchema), login).get('/logout', userLogout);
+// router.get('/logout', userLogout)
+
+router.post('/resendOtp',resendOtp)
 
 // login with google
 
@@ -37,7 +41,6 @@ router.post("/login", validate(loginSchema), login);
 router.post("/forgot-Password", forgotPassword);
 router.post("/chacking-Otp", chackingOtp);
 router.post("/change-Password", changePassword);
-router.post('/resendOtp',resendOtp)
 
 // Account
 router.get('/get-Account', getAdminDetails)
