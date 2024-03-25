@@ -6,6 +6,8 @@ import {
   forgotPassword,
   chackingOtp,
   changePassword,
+  resendOtp
+  // googleAuth
 
 } from "../controllers/adminController.js";
 import {addBlog,getBlog,deleteBlog,EditBlogDetails} from "../controllers/blogController.js"
@@ -35,6 +37,7 @@ router.post("/login", validate(loginSchema), login);
 router.post("/forgot-Password", forgotPassword);
 router.post("/chacking-Otp", chackingOtp);
 router.post("/change-Password", changePassword);
+router.post('/resendOtp',resendOtp)
 
 // Account
 router.get('/get-Account', getAdminDetails)

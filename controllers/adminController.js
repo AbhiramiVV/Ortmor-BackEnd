@@ -122,6 +122,29 @@ export async function login(req, res) {
   }
 }
 
+
+//  Resend otp
+
+export const resendOtp=(req,res)=>{
+
+  try {
+    const {email}=req.body;
+
+    sendVerificationCode(email, req)
+    .then((response) => {
+      res.json({ status: true, message: "OTP Resend successfully send" });
+      adminDetails = req.body;
+    })
+    .catch((response) => {
+      res.json({ status: false, message: "OTP not send" });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ status: false, message: "Internal Server error" });
+  }
+}
+
+
 // login with google
 
 // export async function googleAuth(req, res) {
@@ -221,10 +244,11 @@ export async function getAdminDetails(req, res) {
 
 export async function updateAdminProfile(req, res) {
   try {
-    const { firstName, lastName } = req.body;
+    const { firstName, lastName ,phone, about, email,
+    } = req.body;
     const updatedAdmin = await Admin.updateOne(
       { _id: res.adminId },
-      { $set: { firstName, lastName } }
+      { $set: { firstName, lastName ,phone, about, email} }
     );
     res
       .status(200)
@@ -269,7 +293,7 @@ export async function forgotPassword(req, res) {
         {
           otp: otp,
         },
-        "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+        process.env.JWT_SECRET_KEY_ADMIN, 
       );
 
       return res
@@ -297,14 +321,16 @@ export const chackingOtp = async (req, res) => {
     let tempToken = req.cookies.tempToken;
     const OtpToken = jwt.verify(
       tempToken,
-      "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+      process.env.JWT_SECRET_KEY_ADMIN, 
+
     );
 
     if (otp == OtpToken.otp) {
       let id = admin._id;
       const newTempToken = jwt.sign(
         { ID: id },
-        "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+        process.env.JWT_SECRET_KEY_ADMIN, 
+
       );
 
       return res
@@ -332,7 +358,8 @@ export const changePassword = async (req, res) => {
     let tempToken = req.cookies.tempToken;
     const OtpToken = jwt.verify(
       tempToken,
-      "00f3f20c9fc43a29d4c9b6b3c2a3e18918f0b23a379c152b577ceda3256f3ffa"
+      process.env.JWT_SECRET_KEY_ADMIN, 
+
     );
     let id = OtpToken.ID;
 
