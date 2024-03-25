@@ -77,7 +77,7 @@ export async function SuperAdminLogin(req, res) {
 }
 
 
-//log out
+//superAdmin log out
 export const superAdminLogout = (req, res) => {
   return res
   .cookie('super admin jwt', '', {

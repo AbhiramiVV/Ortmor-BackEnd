@@ -31,8 +31,9 @@ export async function generateOtp(req, res) {
         message: "Email is already exist try another one",
       });
     } else {
+      let otp=randomNumber()
       //  send otp to email
-      sendVerificationCode(email, req)
+      sendVerificationCode(email, otp)
         .then((response) => {
           res.json({ status: true, message: "OTP successfully send" });
           adminDetails = req.body;
@@ -122,7 +123,7 @@ export async function login(req, res) {
   }
 }
 
-//log out
+//Admin log out
 export const adminLogout = (req, res) => {
   return res
     .cookie('admin jwt', '', {
@@ -147,7 +148,9 @@ export const resendOtp=(req,res)=>{
   try {
     const {email}=req.body;
 
-    sendVerificationCode(email, req)
+    let otp=randomNumber()
+      //  send otp to email
+      sendVerificationCode(email, otp)
     .then((response) => {
       res.json({ status: true, message: "OTP Resend successfully send" });
       adminDetails = req.body;
