@@ -76,6 +76,18 @@ export async function SuperAdminLogin(req, res) {
   }
 }
 
+
+//log out
+export const superAdminLogout = (req, res) => {
+  return res
+  .cookie('super admin jwt', '', {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    sameSite: 'none',
+  }).json({ err: false, message: 'Logged out successfully' });
+ }
+
 //ADMIN MNANNAGEMENT
 
 export async function addAdmin(req, res) {

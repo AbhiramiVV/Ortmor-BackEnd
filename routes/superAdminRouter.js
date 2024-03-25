@@ -8,6 +8,7 @@ import {
   unBlockAdmin,
   getBlog,
   changeBlogStatus,
+  superAdminLogout
 } from "../controllers/superAdminController.js";
 import validate from "../middleware/validateBody.js";
 import { loginSchema } from "../Utils/yupSchema.js";
@@ -19,7 +20,7 @@ const router = express.Router();
 
 // Admin Auth routes
 router.get("/auth", authAdmin);
-router.post("/login", validate(loginSchema), SuperAdminLogin);
+router.post("/login", validate(loginSchema), SuperAdminLogin).get('/logout', superAdminLogout);;
 
 // router.use(verifySuperAdmin)
 

@@ -26,8 +26,6 @@ const router = express.Router();
 router.post("/signup", validate(signupSchema), generateOtp);
 router.post("/otp", doSignup);
 router.post("/login", validate(loginSchema), login).get('/logout', adminLogout);
-// router.get('/logout', userLogout)
-
 router.post('/resendOtp',resendOtp)
 
 // login with google
