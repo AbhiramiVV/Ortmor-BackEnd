@@ -42,6 +42,7 @@ export function sendVerificationCode (email,otp){
 
 
 export function verifyOtp (otp) {
+
   return new Promise((resolve,reject)=>{
     if (otpValue==otp){
         resolve({status:true});
@@ -49,4 +50,5 @@ export function verifyOtp (otp) {
         reject();
     }
 })
+
 }

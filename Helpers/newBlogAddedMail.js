@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 export function sendBlogNotification  (email , message ){
-
+  
   return new Promise((resolve, reject)=>{
       let transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",

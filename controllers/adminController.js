@@ -142,7 +142,6 @@ export const adminLogout = (req, res) => {
 };
 
 //  Resend otp
-
 export const resendOtp=(req,res)=>{
 
   try {

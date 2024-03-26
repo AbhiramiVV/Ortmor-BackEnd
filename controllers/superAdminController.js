@@ -36,7 +36,7 @@ export async function authAdmin(req, res) {
         }
       });
     } else {
-      res.json({ status: false, message: "Admin not exist " });
+      res.json({ status: false, message: "superAdmin not exist " });
     }
   } catch (error) {
     res.json({ status: false, message: "Internal Server Error " });
@@ -192,7 +192,6 @@ export async function unBlockAdmin(req, res) {
 
 //BLOG MANAGEMENT
 
-//get blogs
 
 export async function getBlog(req, res) {
   try {

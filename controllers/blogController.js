@@ -2,6 +2,7 @@ import moment from "moment/moment.js";
 import { sendBlogNotification } from "../Helpers/newBlogAddedMail.js";
 import Blog from "../model/blogModel.js";
 import cloudinary from "../config/cloudinary.js";
+import slugify from "slugify";
 
 //add blogs
 
@@ -13,7 +14,6 @@ export async function addBlog(req, res) {
       metaTitle,
       metaDescription,
       metaTag,
-      slug,
       date,
       content,
     } = req.body;
@@ -23,7 +23,6 @@ export async function addBlog(req, res) {
       !metaTitle ||
       !metaDescription ||
       !metaTag ||
-      !slug ||
       !date ||
       !content
     ) {
@@ -33,6 +32,15 @@ export async function addBlog(req, res) {
       return;
     }
 
+    // Generate slug from title
+    const slug = slugify(title, { lower: true });
+
+    // Check if a blog with the same slug already exists
+    const existingBlog = await Blog.findOne({ slug });
+    if (existingBlog) {
+      res.status(400).json({ status: false, message: "Blog already exists" });
+      return;
+    }
     // Upload each blog image content to Cloudinary
 
     const uploadBlogToCloudinary = async (file) => {
@@ -122,7 +130,7 @@ export async function getBlog(req, res) {
 
 export async function deleteBlog(req, res) {
   try {
-    // Find course by id and delete
+  
 
     const deletedBlog = await Blog.findByIdAndDelete(req.params.blogId);
 
@@ -195,6 +203,7 @@ export async function EditBlogDetails(req, res) {
     }
 
     const formattedDate = moment(req.body.date, "DD-MM-YYYY").toDate();
+    const slug = req.body.slug.toLowerCase().replace(/ /g, "-");
 
     await Blog.updateOne(
       { _id: req.body.blogId },
@@ -205,7 +214,7 @@ export async function EditBlogDetails(req, res) {
           metaTitle: req.body.metaTitle,
           metaDescription: req.body.metaDescription,
           metaTag: req.body.metaTag,
-          slug: req.body.slug,
+          slug: slug,
           date: formattedDate,
           content: req.body.content,
           image,

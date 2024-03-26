@@ -9,7 +9,7 @@ import xss from "xss-clean";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
-// import uploadVideo from "./middleware/video-upload.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -31,6 +31,8 @@ dbConnect();
 
 app.use("/admin", adminRouter);
 app.use("/superAdmin", superAdminRouter);
+
+app.use(errorHandler);
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

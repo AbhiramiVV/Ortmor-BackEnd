@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
 
 export function sendEmail (email , otp){
+
   return new Promise((resolve, reject)=>{
       let transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
@@ -36,7 +37,6 @@ export function sendEmail (email , otp){
 }
 
 export function sendNotificationEmail (email , password){
-
 
   return new Promise((resolve, reject)=>{
       let transporter = nodemailer.createTransport({
