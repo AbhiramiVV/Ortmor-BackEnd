@@ -67,9 +67,7 @@ export async function SuperAdminLogin(req, res) {
     });
     // hiding password and pass the admin only
     superAdmin.password = "empty";
-    res
-      .status(200)
-      .json({ superAdmin, token, login: true, message: "Login successfully " });
+    res.status(200).json({ superAdmin, token, login: true, message: "Login successfully " });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -140,9 +138,7 @@ export async function getAllAdmin(req, res) {
       .skip(req.paginatedResults.startIndex)
       .limit(req.paginatedResults.endIndex);
     if (admin) {
-      res
-        .status(200)
-        .json({ status: true, admin, pagination: req.paginatedResults });
+      res.status(200).json({ status: true, admin, pagination: req.paginatedResults });
     }
   } catch (error) {
     res.status(500).json({ created: false, message: "Internal Server Error" });
@@ -158,9 +154,7 @@ export async function blockAdmin(req, res) {
       { new: true }
     );
     if (admin) {
-      res
-        .status(200)
-        .json({ status: true, message: "Admin Blocked Successfully" });
+      res.status(200).json({ status: true, message: "Admin Blocked Successfully" });
     } else {
       res.status(404).json({ status: false, message: "Something went wrong" });
     }
@@ -179,9 +173,7 @@ export async function unBlockAdmin(req, res) {
     );
 
     if (admin) {
-      res
-        .status(200)
-        .json({ status: true, message: "Admin Unblocked Successfully" });
+      res.status(200).json({ status: true, message: "Admin Unblocked Successfully" });
     } else {
       res.status(404).json({ status: false, message: "Something went wrong " });
     }

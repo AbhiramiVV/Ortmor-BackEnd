@@ -286,7 +286,7 @@ export async function updateAdminAvatar(req, res) {
     const updateAdmin = await Admin.findByIdAndUpdate(
       res.adminId,
       { $set: { picture: image } },
-      { new: true } // This option returns the updated document
+      { new: true }
     );
 
     res
