@@ -252,56 +252,46 @@ export async function EditBlogDetails(req, res) {
     if (!blog) {
       return res.status(404).json({ status: false, message: "Blog not found" });
     }
-    //update images
-    const uploadBlogToCloudinary = async (file) => {
-      if (file) {
-        const uploadedBlogContent = await cloudinary.uploader.upload(file, {
-          folder: "ortmor",
-          resource_type: "image",
-        });
-        return uploadedBlogContent.secure_url || "";
-      }
-      return "";
-    };
 
-    let image;
-    if (req.files?.image && req.files.image[0].path) {
-      const uploadedImageUrl = await uploadBlogToCloudinary(
-        req.files.image[0].path
-      );
-      if (uploadedImageUrl) {
-        image = uploadedImageUrl;
-      }
-    } else {
-      image = blog.image;
-    }
-    //update videos
-    const uploadBlogvideoToCloudinary = async (file) => {
-      if (file) {
-        const uploadedBlogContent = await cloudinary.uploader.upload(file, {
-          folder: "ortmor",
-          resource_type: "video",
-        });
-        return uploadedBlogContent.url || "";
-      }
-      return "";
-    };
-    let video;
-    if (req.files?.video && req.files.video[0].path) {
-      const uploadedVideoUrl = await uploadBlogvideoToCloudinary(
-        req.files.video[0].path
-      );
+    const slug = req.body.slug.toLowerCase().replace(/ /g, "-");
 
-      if (uploadedVideoUrl) {
-        video = uploadedVideoUrl;
-      }
-    } else {
-      video = blog.video;
-    }
+      // Upload each blog image content to AWS S3
+      const uploadObjectToS3 = async (file, resourceType) => {
+        if (file) {
+          const params = {
+            Bucket: "ortmorblog", // Your S3 bucket name
+            Key: `ortmor/${req.slug}-${resourceType}`, // Object key in S3 bucket
+            Body: file,
+            ACL: "private", // Optional: set ACL permissions
+            ContentType: file.mimetype, // Set content type for proper display
+          };
+    
+          try {
+            const data = await s3Client.send(new PutObjectCommand(params));
+            console.log("Successfully uploaded object to S3:", params.Key);
+            return params.Key;
+          } catch (error) {
+            console.error("Error uploading object to S3:", error);
+            return "";
+          }
+        }
+        return "";
+      };
+    
+      // Upload blog image to AWS S3
+      const uploadedImageUrl = await uploadObjectToS3(
+        req.files.image[0].path,
+        "image"
+      );
+    
+      // Upload video to AWS S3
+      const uploadedVideoUrl = await uploadObjectToS3(
+        req.files.video[0].path,
+        "video"
+      );
 
     const formattedDate = moment(req.body.date, "DD-MM-YYYY").toDate();
     // Slug creation
-    const slug = req.body.slug.toLowerCase().replace(/ /g, "-");
 
     await Blog.updateOne(
       { _id: req.body.blogId },
@@ -315,8 +305,8 @@ export async function EditBlogDetails(req, res) {
           slug: slug,
           date: formattedDate,
           content: req.body.content,
-          image,
-          video,
+          image:uploadedImageUrl,
+          video:uploadedVideoUrl,
         },
       }
     );
