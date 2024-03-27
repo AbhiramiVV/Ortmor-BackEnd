@@ -152,7 +152,7 @@ export async function addBlog(req, res) {
         Bucket: "ortmorblog", // Your S3 bucket name
         Key: `ortmor/${slug}-${resourceType}`, // Object key in S3 bucket
         Body: file,
-        ACL: "private", // Optional: set ACL permissions
+        ACL: "public-read", // Optional: set ACL permissions
         ContentType: file.mimetype, // Set content type for proper display
       };
 
@@ -262,7 +262,7 @@ export async function EditBlogDetails(req, res) {
             Bucket: "ortmorblog", // Your S3 bucket name
             Key: `ortmor/${req.slug}-${resourceType}`, // Object key in S3 bucket
             Body: file,
-            ACL: "private", // Optional: set ACL permissions
+            ACL: "public-read", // Optional: set ACL permissions
             ContentType: file.mimetype, // Set content type for proper display
           };
     
