@@ -163,7 +163,7 @@ export async function addBlog(req, res) {
         console.log("Successfully uploaded object to S3:", params.Key);
         
         // Construct and return the complete URL of the uploaded object
-        const objectUrl = `https://blr1.digitaloceanspaces.com/${params.Key}`;
+        const objectUrl = `https://ortmorblog.blr1.digitaloceanspaces.com/${params.Key}`;
         return objectUrl; 
       } catch (error) {
         console.error("Error uploading object to S3:", error);
@@ -215,6 +215,8 @@ export async function addBlog(req, res) {
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 }
+
+
 //get blogs
 
 export async function getBlog(req, res) {
@@ -230,14 +232,13 @@ export async function getBlog(req, res) {
   }
 }
 
+
+
 // Delete blog
 
 export async function deleteBlog(req, res) {
   try {
-  
-
     const deletedBlog = await Blog.findByIdAndDelete(req.params.blogId);
-
     if (deletedBlog) {
       res.status(200).json({ status: true, message: " Blog deleted successfully" });
     } else {
@@ -248,6 +249,8 @@ export async function deleteBlog(req, res) {
     res.status(500).json({ status: false, message: "Internal server error" });
   }
 }
+
+
 
 // Edit blog Details
 
@@ -290,13 +293,11 @@ export async function EditBlogDetails(req, res) {
         req.files.image[0].path,
         "image"
       );
-    
       // Upload video to AWS S3
       const uploadedVideoUrl = await uploadObjectToS3(
         req.files.video[0].path,
         "video"
       );
-
     const formattedDate = moment(req.body.date, "DD-MM-YYYY").toDate();
     // Slug creation
 

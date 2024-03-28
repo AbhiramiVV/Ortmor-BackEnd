@@ -18,6 +18,7 @@ const createToken = (id) => {
   });
 };
 
+
 // post Signup
 export async function generateOtp(req, res) {
   try {
