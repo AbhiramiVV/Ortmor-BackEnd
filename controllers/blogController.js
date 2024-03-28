@@ -148,9 +148,11 @@ export async function addBlog(req, res) {
    // Upload each blog image content to AWS S3
    const uploadObjectToS3 = async (file, resourceType) => {
     if (file) {
+     const fileFormat = file.split('.').pop(); // Extract the file extension
+
       const params = {
-        Bucket: "ortmorblog", // Your S3 bucket name
-        Key: `ortmor/${slug}-${resourceType}`, // Object key in S3 bucket
+        Bucket: "ortmorblog", 
+        Key: `ortmor/${slug}-${resourceType}.${fileFormat}`, 
         Body: file,
         ACL: "public-read", // Optional: set ACL permissions
         ContentType: file.mimetype, // Set content type for proper display
@@ -159,7 +161,10 @@ export async function addBlog(req, res) {
       try {
         const data = await s3Client.send(new PutObjectCommand(params));
         console.log("Successfully uploaded object to S3:", params.Key);
-        return params.Key;
+        
+        // Construct and return the complete URL of the uploaded object
+        const objectUrl = `https://blr1.digitaloceanspaces.com/${params.Key}`;
+        return objectUrl; 
       } catch (error) {
         console.error("Error uploading object to S3:", error);
         return "";
@@ -258,9 +263,10 @@ export async function EditBlogDetails(req, res) {
       // Upload each blog image content to AWS S3
       const uploadObjectToS3 = async (file, resourceType) => {
         if (file) {
+          const fileFormat = file.split('.').pop(); // Extract the file extension
           const params = {
             Bucket: "ortmorblog", // Your S3 bucket name
-            Key: `ortmor/${req.slug}-${resourceType}`, // Object key in S3 bucket
+            Key: `ortmor/${slug}-${resourceType}.${fileFormat}`,// Object key in S3 bucket
             Body: file,
             ACL: "public-read", // Optional: set ACL permissions
             ContentType: file.mimetype, // Set content type for proper display
@@ -269,7 +275,8 @@ export async function EditBlogDetails(req, res) {
           try {
             const data = await s3Client.send(new PutObjectCommand(params));
             console.log("Successfully uploaded object to S3:", params.Key);
-            return params.Key;
+            const objectUrl = `https://ortmorblog.blr1.digitaloceanspaces.com/${params.Key}`;
+             return `${objectUrl}`;
           } catch (error) {
             console.error("Error uploading object to S3:", error);
             return "";
