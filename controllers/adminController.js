@@ -70,7 +70,7 @@ export async function doSignup(req, res) {
         phone,
         about,
       });
-
+      console.log(admin);
       res
         .status(201)
         .json({ status: true, message: "Otp verified successfully" });
